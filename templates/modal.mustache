@@ -1,0 +1,79 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template tiny_timezone/modal
+
+    Modal to insert a date/time with a timezone within the Tiny Editor.
+
+    Classes required for JS:
+    * none
+
+    Data attributes required for JS:
+    * none
+
+    Context variables required for this template:
+    * elementid - unique id prefix for form fields
+    * timezones - array of {value, label, selected} for the timezone select
+    * isupdating - whether an existing span is being edited
+
+    Example context (json):
+    {
+        "elementid": "exampleId",
+        "timezones": [{"value": "Asia/Tokyo", "label": "Asia/Tokyo", "selected": true}],
+        "isupdating": false
+    }
+}}
+{{< core/modal }}
+
+    {{$title}}
+        {{#str}} dialogtitle, tiny_timezone {{/str}}
+    {{/title}}
+
+    {{$body}}
+        <form class="mform" id="{{uniqid}}">
+            <div class="mb-3">
+                <label for="{{elementid}}_tiny_timezone_datetime">{{#str}} datetimelabel, tiny_timezone {{/str}}</label>
+                <input
+                    class="form-control tiny_timezone_datetime"
+                    id="{{elementid}}_tiny_timezone_datetime"
+                    type="datetime-local"
+                    value="{{datetime}}"
+                />
+            </div>
+            <div class="mb-3">
+                <label for="{{elementid}}_tiny_timezone_timezone">{{#str}} timezonelabel, tiny_timezone {{/str}}</label>
+                <select class="form-select tiny_timezone_timezone" id="{{elementid}}_tiny_timezone_timezone">
+                    {{#timezones}}
+                        <option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>
+                    {{/timezones}}
+                </select>
+            </div>
+        </form>
+    {{/body}}
+
+    {{$footer}}
+        <button type="button" class="btn btn-primary" data-action="save">
+            {{#isupdating}}
+                {{#str}} update, tiny_timezone {{/str}}
+            {{/isupdating}}
+            {{^isupdating}}
+                {{#str}} insert, tiny_timezone {{/str}}
+            {{/isupdating}}
+        </button>
+    {{/footer}}
+
+{{/ core/modal }}
