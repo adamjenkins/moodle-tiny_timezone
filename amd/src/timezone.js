@@ -23,6 +23,7 @@
 
 import Templates from 'core/templates';
 import Pending from 'core/pending';
+import {exception as displayException} from 'core/notification';
 import {spanClass} from 'tiny_timezone/common';
 import Selectors from 'tiny_timezone/selectors';
 
@@ -159,5 +160,5 @@ export const setTimezone = (currentForm, editor) => {
             editor.insertContent(html);
         }
         return pendingPromise.resolve();
-    });
+    }).catch(displayException);
 };
