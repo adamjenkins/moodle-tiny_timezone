@@ -21,11 +21,18 @@
     converted to the viewer's own timezone by filter_timezone. The visible
     text is a failsafe shown as-is wherever the filter is not active.
 
+    contenteditable="false" makes the span an atomic unit inside Tiny's editor,
+    so the browser cannot place a text caret inside it: without this, a caret
+    left immediately after the span can still resolve as being inside it, and
+    text typed there would be silently lost when filter_timezone rewrites the
+    span's contents. The attribute is a no-op outside an editable context.
+
     Classes required for JS:
-    * none
+    * filter_timezone - used by amd/src/timezone.js (getSelectedSpan) to find/select this span
 
     Data attributes required for JS:
-    * none
+    * data-timestamp - read by amd/src/timezone.js (getCurrentData) to pre-fill the dialogue
+    * data-timezone - read by amd/src/timezone.js (getCurrentData) to pre-fill the dialogue
 
     Context variables required for this template:
     * timestamp - Unix timestamp (UTC seconds) of the moment being described
@@ -39,4 +46,4 @@
         "displaytext": "2026-06-24 14:00 (Asia/Tokyo)"
     }
 }}
-<span class="filter_timezone" data-timestamp="{{timestamp}}" data-timezone="{{timezone}}">{{displaytext}}</span>
+<span class="filter_timezone" contenteditable="false" data-timestamp="{{timestamp}}" data-timezone="{{timezone}}">{{displaytext}}</span>

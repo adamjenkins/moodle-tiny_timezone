@@ -5,6 +5,44 @@ are documented here. Entries are ordered newest-first.
 
 ---
 
+## [2026062401] — 2026-06-24 — Fix caret escaping the span; fix duplicate on edit
+
+### Fixed
+- Text typed immediately after inserting a date/time could end up *inside*
+  the inserted span and be silently discarded once `filter_timezone` rewrote
+  the span's contents. Fixed by marking the span `contenteditable="false"` in
+  `embed_timezone.mustache`, making it an atomic unit the browser cannot
+  place a caret inside — the same pattern TinyMCE itself uses for atomic
+  inline widgets (e.g. mentions). An earlier attempt at this fix, which
+  manually inserted a zero-width-space placeholder text node after the span,
+  turned out to be unreliable: TinyMCE's own idle content cleanup strips
+  invisible characters it doesn't recognise as its own, silently
+  reintroducing the bug if the user paused a few seconds before typing.
+- Clicking an existing span and reopening the dialogue to edit it was
+  actually inserting a *second*, duplicate span rather than updating the
+  original one. The span being edited was captured correctly when the
+  dialogue opened (which is why the form pre-filled with the right values),
+  but `setTimezone()` independently re-detected the selected span at save
+  time — by which point focus had moved into the dialogue's own form fields
+  and the editor no longer reported the span as selected. Fixed by capturing
+  the span reference once, when the dialogue opens, and threading it through
+  to save time instead of re-querying the editor's selection later.
+
+### Changed
+- `embed_timezone.mustache`'s doc comment now correctly documents that the
+  `filter_timezone` class and the `data-timestamp`/`data-timezone`
+  attributes are required by the JS (previously said "none" for both).
+
+### Verified
+- Manually tested in a real browser session (Playwright against a live
+  Moodle 5.2 install), repeatedly: typing immediately after insert, typing
+  after a multi-second pause, and the full save → reload → filter-render
+  round trip — all keep typed text outside the span.
+- Re-tested the edit-existing-span flow the same way: editing now updates
+  the one existing span in place, with no duplicate, across repeated runs.
+- Ran phpcs (Moodle standard), the AMD/Grunt build with ESLint, and
+  moodlecheck — all clean.
+
 ## [2026062400] — 2026-06-24 — Initial release
 
 ### Added

@@ -129,12 +129,15 @@ export const getCurrentData = (editor) => {
 };
 
 /**
- * Insert a new timezone span, or update the one currently selected, from the dialogue form.
+ * Insert a new timezone span, or update an existing one, from the dialogue form.
  *
  * @param {Element} currentForm
  * @param {TinyMCE} editor
+ * @param {Element|null} currentSpan the span being edited, as captured when the dialogue was
+ *        opened (the editor's own selection can no longer be trusted to find it by this point,
+ *        since focus has moved into the dialogue's form fields), or null to insert a new one.
  */
-export const setTimezone = (currentForm, editor) => {
+export const setTimezone = (currentForm, editor, currentSpan) => {
     const datetimeInput = currentForm.querySelector(Selectors.elements.datetime);
     const timezoneSelect = currentForm.querySelector(Selectors.elements.timezone);
 
@@ -153,12 +156,22 @@ export const setTimezone = (currentForm, editor) => {
     };
 
     Templates.renderForPromise('tiny_timezone/embed_timezone', context).then(({html}) => {
-        const currentSpan = getSelectedSpan(editor);
+        const newSpan = editor.dom.create('div', {}, html).firstElementChild;
+
         if (currentSpan) {
-            currentSpan.outerHTML = html;
+            editor.dom.replace(newSpan, currentSpan);
         } else {
-            editor.insertContent(html);
+            editor.selection.setNode(newSpan);
         }
+
+        // The span is contenteditable="false" (see the template), so it is an atomic unit as
+        // far as the browser's caret is concerned: it cannot be placed inside it, however the
+        // selection below is resolved. That's what actually keeps text typed next outside the
+        // span, not this particular placement.
+        editor.selection.select(newSpan);
+        editor.selection.collapse(false);
+        editor.nodeChanged();
+
         return pendingPromise.resolve();
     }).catch(displayException);
 };

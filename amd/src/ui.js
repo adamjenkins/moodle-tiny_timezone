@@ -23,7 +23,7 @@
 
 import TimezoneModal from 'tiny_timezone/modal';
 import {getTimezones} from 'tiny_timezone/options';
-import {getCurrentData, setTimezone} from 'tiny_timezone/timezone';
+import {getCurrentData, getSelectedSpan, setTimezone} from 'tiny_timezone/timezone';
 import Selectors from 'tiny_timezone/selectors';
 
 /**
@@ -33,6 +33,12 @@ import Selectors from 'tiny_timezone/selectors';
  * @returns {Promise<void>}
  */
 export const handleAction = async(editor) => {
+    // Capture which span (if any) is being edited now, while the editor's selection is still
+    // live. By the time the dialogue's save button is clicked, focus has moved into the
+    // dialogue's own form fields and the editor no longer reports this span as selected, so
+    // setTimezone() must be told which span to update rather than re-detecting it itself.
+    const currentSpan = getSelectedSpan(editor);
+
     const modal = await TimezoneModal.create({
         templateContext: getTemplateContext(editor),
     });
@@ -44,7 +50,7 @@ export const handleAction = async(editor) => {
     root.addEventListener('click', (e) => {
         if (e.target.closest(Selectors.actions.submit)) {
             e.preventDefault();
-            setTimezone(currentForm, editor);
+            setTimezone(currentForm, editor, currentSpan);
             modal.destroy();
         }
     });
@@ -52,7 +58,7 @@ export const handleAction = async(editor) => {
     root.addEventListener('keydown', (e) => {
         if ((e.key === 'Enter' || e.key === ' ') && e.target.closest(Selectors.actions.submit)) {
             e.preventDefault();
-            setTimezone(currentForm, editor);
+            setTimezone(currentForm, editor, currentSpan);
             modal.destroy();
         }
     });
