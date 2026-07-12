@@ -1,0 +1,10 @@
+{
+    "name": "adamjenkins/moodle-tiny_timezone",
+    "description": "A TinyMCE editor plugin that lets a user insert a date and time in their own timezone, converted for viewers by the companion filter_timezone plugin",
+    "type": "moodle-tiny",
+    "require": {
+        "moodle/moodle": ">=5.0 <5.3",
+        "moodle/composer-installer": "^1.0"
+    },
+    "license": "GPL-3.0-or-later"
+}
