@@ -18,7 +18,7 @@
  * Tiny Timezone plugin.
  *
  * @package    tiny_timezone
- * @copyright  2026 PluginDev
+ * @copyright  2026 Adam Jenkins <adam@wisecat.net>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -35,7 +35,7 @@ use editor_tiny\plugin_with_menuitems;
  * Tiny Timezone plugin.
  *
  * @package    tiny_timezone
- * @copyright  2026 PluginDev
+ * @copyright  2026 Adam Jenkins <adam@wisecat.net>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class plugininfo extends plugin implements plugin_with_buttons, plugin_with_configuration, plugin_with_menuitems {
