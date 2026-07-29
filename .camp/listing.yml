@@ -1,0 +1,22 @@
+# camp listing manifest — descriptive content for your plugin's page.
+# Edit freely and commit; camp ingests this file at each tagged release.
+# Schema: https://camp-registry.org/schema/listing.schema.json
+name: tiny_timezone
+summary: 'A TinyMCE plugin that inserts a date/time in the author''s timezone, which the companion filter_timezone converts to each viewer''s timezone.'
+description: |
+  Adds an "Insert date/time with timezone" button and Insert-menu item to
+  TinyMCE: a dialogue with a date/time picker and a timezone selector
+  (populated from Moodle's own IANA list) inserts a tagged `<span>` carrying
+  the timestamp and timezone. The companion **Timezone** text filter
+  (`filter_timezone`) then renders it in each viewing user's own timezone.
+labels:
+  # Required disclosure labels — pick all that apply (RFC §4.7):
+  #   fully-free | freemium | paid-service | external-account
+  #   donation-supported | commercial-support-available
+  - fully-free
+# screenshots:
+#   - path: .camp/screenshots/overview.png
+#     caption: Main view
+# links:
+#   docs: https://…
+#   issues: https://…
