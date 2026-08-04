@@ -5,6 +5,14 @@ are documented here. Entries are ordered newest-first.
 
 ---
 
+## [2026080400] — 2026-08-04 — Add the GPL-3.0 LICENSE file
+
+### Added
+
+- The full GPL-3.0 licence text is now included as `LICENSE` in the repository
+  root. The plugin's licence is unchanged (GPL-3.0-or-later, as declared in
+  `composer.json`); the file was simply missing.
+
 ## [2026062401] — 2026-06-24 — Fix caret escaping the span; fix duplicate on edit
 
 ### Fixed
