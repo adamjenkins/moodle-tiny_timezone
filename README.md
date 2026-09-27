@@ -26,7 +26,7 @@ in place rather than inserting a duplicate.
 Requirements
 ============
 
-- Moodle 5.0 or later (CI-tested on Moodle 5.1 and 5.2)
+- Moodle 5.0 or later (CI-tested on Moodle 5.1 and 5.2; moodle.git main (5.3) as a non-blocking job)
 - PHP 8.2 or later
 - The `editor_tiny` subsystem (TinyMCE editor, included with Moodle core)
 
@@ -62,6 +62,7 @@ Compatibility
 | 5.1 | 8.2, 8.3, 8.4 | ✓ CI |
 
 CI runs on PostgreSQL and MariaDB for all combinations above.
+moodle.git main (5.3) is also tested as a non-blocking job (PHP 8.4/PostgreSQL 17, PHP 8.3/MariaDB 11.4).
 
 License
 =======

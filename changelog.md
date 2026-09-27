@@ -5,6 +5,12 @@ are documented here. Entries are ordered newest-first.
 
 ---
 
+## [Unreleased]
+
+### Changed
+
+- Declare Moodle 5.3 support.
+
 ## [2026080400] — 2026-08-04 — Add the GPL-3.0 LICENSE file
 
 ### Added

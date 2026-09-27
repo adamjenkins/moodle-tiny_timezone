@@ -1,5 +1,9 @@
 # Changes
 
+## Unreleased
+
+- Declare Moodle 5.3 support.
+
 ## v1.1.1 (2026080400)
 
 - The full GPL-3.0 licence text is now included as `LICENSE` in the repository
