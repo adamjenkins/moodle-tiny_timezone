@@ -5,7 +5,7 @@ are documented here. Entries are ordered newest-first.
 
 ---
 
-## [Unreleased]
+## [2026100300] — 2026-10-03 — Declare Moodle 5.3 support
 
 ### Changed
 
