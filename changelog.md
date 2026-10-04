@@ -5,7 +5,16 @@ are documented here. Entries are ordered newest-first.
 
 ---
 
-## [Unreleased]
+## [1.1.3] - 2026-10-04
+
+### Changed
+
+- composer.json requires `moodle/moodle` `^5.0` instead of `>=5.0 <5.4`: the explicit
+  upper cap is dropped so later Moodle 5.x releases are not excluded.
+- A camp release workflow (`.github/workflows/camp-release.yml`) publishes each tagged
+  release to the camp registry (camp-registry.org).
+- CI tests `MOODLE_503_STABLE` (PHP 8.3–8.4, PostgreSQL 17, MariaDB 11.4) instead of
+  Moodle `main`, now that Moodle 5.3 is released.
 
 ### Fixed
 
