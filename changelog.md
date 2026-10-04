@@ -5,6 +5,33 @@ are documented here. Entries are ordered newest-first.
 
 ---
 
+## [Unreleased]
+
+### Fixed
+
+- A date/time picked within a few hours of a daylight-saving change was stored,
+  and shown to every viewer, one hour off: `wallTimeToTimestamp()` measured the
+  zone's UTC offset at the wall-clock value read as if it were UTC, not at the
+  real instant. It now tries the offsets in force either side of that time and
+  keeps the one whose instant really shows the chosen wall time. A wall time
+  skipped when clocks go forward (e.g. 02:30) moves forward by the gap (03:30);
+  a wall time that occurs twice when clocks go back resolves to the first
+  occurrence.
+- The JavaScript file headers carried a scaffolding placeholder copyright
+  holder; they now name Adam Jenkins, as the PHP files do.
+
+### Added
+
+- PHPUnit tests for the editor configuration (only real IANA timezones, never
+  the `99` server-default sentinel), the `tiny/timezone:use` capability check
+  and the null privacy provider. CI's PHPUnit step previously passed with no
+  tests at all.
+- Behat tests (`tests/behat/insert_timezone.feature`) for inserting a date/time
+  and re-editing it, and for wall times at spring-forward and fall-back changes
+  in both a negative-offset (America/New_York) and a positive-offset
+  (Europe/Berlin) zone, checking the stored `data-timestamp`. CI's Behat step
+  previously passed with no features at all.
+
 ## [2026100300] — 2026-10-03 — Declare Moodle 5.3 support
 
 ### Changed

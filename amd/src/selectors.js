@@ -17,7 +17,7 @@
  * Tiny Timezone plugin helper function to build queryable data selectors.
  *
  * @module      tiny_timezone/selectors
- * @copyright   2026 PluginDev
+ * @copyright   2026 Adam Jenkins <adam@wisecat.net>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

@@ -17,7 +17,7 @@
  * Timezone helper for Tiny Timezone plugin.
  *
  * @module      tiny_timezone/timezone
- * @copyright   2026 PluginDev
+ * @copyright   2026 Adam Jenkins <adam@wisecat.net>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -28,13 +28,45 @@ import {spanClass} from 'tiny_timezone/common';
 import Selectors from 'tiny_timezone/selectors';
 
 /**
+ * Get the UTC offset of an IANA timezone at a given instant.
+ *
+ * @param {Number} instantMs the instant, in milliseconds since the Unix epoch
+ * @param {String} timeZone IANA timezone identifier
+ * @returns {Number} the zone's offset from UTC at that instant, in milliseconds (east positive)
+ */
+const zoneOffsetAt = (instantMs, timeZone) => {
+    const parts = new Intl.DateTimeFormat('en-US', {
+        timeZone,
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric',
+        hourCycle: 'h23',
+    }).formatToParts(new Date(instantMs));
+
+    const get = (type) => parseInt(parts.find((part) => part.type === type).value, 10);
+    // The zone's wall-clock reading at this instant, read back as if it were UTC.
+    const wallAsUtcMs = Date.UTC(get('year'), get('month') - 1, get('day'), get('hour') % 24, get('minute'), get('second'));
+    const wholeSecondMs = instantMs - (((instantMs % 1000) + 1000) % 1000);
+
+    return wallAsUtcMs - wholeSecondMs;
+};
+
+/**
  * Convert a "YYYY-MM-DDTHH:MM" wall-clock value, understood as a local time in the given
  * IANA timezone, into a Unix timestamp (UTC seconds).
  *
- * There is no Intl API to parse a wall-clock time directly into a specific zone, so we use
- * the standard round-trip trick: treat the wall-clock value as if it were UTC, then measure
- * the offset between that same instant rendered in UTC and rendered in the target zone, and
- * apply the difference.
+ * There is no Intl API to parse a wall-clock time directly into a specific zone. The offset
+ * must be measured at the real instant, not at the wall-clock value read as UTC, or times near
+ * a DST change come out an hour off. So both offsets in force around that wall time (a day
+ * either side; no zone changes offset twice in a day) are tried, and an offset is accepted only
+ * if the instant it gives really does show that wall time in the zone.
+ *
+ * Policy (the same as Temporal's "compatible" disambiguation): a wall time that occurs twice
+ * when clocks go back resolves to the earlier instant; a wall time skipped when clocks go
+ * forward is moved forward by the length of the gap (e.g. 02:30 becomes 03:30).
  *
  * @param {String} datetimeLocalValue value of an <input type="datetime-local">
  * @param {String} timeZone IANA timezone identifier
@@ -42,12 +74,19 @@ import Selectors from 'tiny_timezone/selectors';
  */
 export const wallTimeToTimestamp = (datetimeLocalValue, timeZone) => {
     const asUtcMs = new Date(`${datetimeLocalValue}:00Z`).getTime();
+    const dayMs = 24 * 60 * 60 * 1000;
 
-    const utcRendered = new Date(asUtcMs).toLocaleString('en-US', {timeZone: 'UTC'});
-    const zoneRendered = new Date(asUtcMs).toLocaleString('en-US', {timeZone});
-    const offsetMs = new Date(utcRendered).getTime() - new Date(zoneRendered).getTime();
+    const offsetBefore = zoneOffsetAt(asUtcMs - dayMs, timeZone);
+    const offsetAfter = zoneOffsetAt(asUtcMs + dayMs, timeZone);
 
-    return Math.round((asUtcMs + offsetMs) / 1000);
+    const matches = [offsetBefore, offsetAfter]
+        .map((offset) => asUtcMs - offset)
+        .filter((candidate) => zoneOffsetAt(candidate, timeZone) === asUtcMs - candidate);
+
+    // No match means a skipped wall time: reading it with the pre-change offset moves it forward.
+    const instantMs = matches.length ? Math.min(...matches) : asUtcMs - offsetBefore;
+
+    return Math.round(instantMs / 1000);
 };
 
 /**

@@ -25,7 +25,7 @@ import * as Options from 'tiny_timezone/options';
  * Tiny Timezone plugin for Moodle.
  *
  * @module      tiny_timezone/plugin
- * @copyright   2026 PluginDev
+ * @copyright   2026 Adam Jenkins <adam@wisecat.net>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
