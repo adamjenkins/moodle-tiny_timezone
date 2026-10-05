@@ -14,9 +14,9 @@ labels:
   #   fully-free | freemium | paid-service | external-account
   #   donation-supported | commercial-support-available
   - fully-free
-# screenshots:
-#   - path: .camp/screenshots/overview.png
-#     caption: Main view
+screenshots:
+  - path: .camp/screenshots/01-insert-dialog.png
+    caption: 'The insert dialog: pick a date, time and timezone, with the clock button in the TinyMCE toolbar behind it'
 # links:
 #   docs: https://…
 #   issues: https://…
